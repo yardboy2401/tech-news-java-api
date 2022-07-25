@@ -9,6 +9,7 @@ import com.technews.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -73,6 +74,61 @@ public class HomePageController {
         model.addAttribute("points", "points");
 
         return "homepage";
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboardPageSetup(Model model, HttpServletRequest request) throws Exception {
+
+        if (request.getSession(false) != null) {
+            setupDashboardPage(model, request);
+            return "dashboard";
+        } else {
+            model.addAttribute("user", new User());
+            return "login";
+        }
+    }
+
+    @GetMapping("/dashboardEmptyTitleAndLink")
+    public String dashboardEmptyTitleAndLinkHandler(Model model, HttpServletRequest request) throws Exception {
+        setupDashboardPage(model, request);
+        model.addAttribute("notice", "To create a post the Title and Link must be populated!");
+        return "dashboard";
+    }
+
+    @GetMapping("/singlePostEmptyComment/{id}")
+    public String singlePostEmptyCommentHandler(@PathVariable int id, Model model, HttpServletRequest request) {
+        setupSinglePostPage(id, model, request);
+        model.addAttribute("notice", "To add a comment you must enter the comment in the comment text area!");
+        return "single-post";
+    }
+
+    @GetMapping("/post/{id}")
+    public String singlePostPageSetup(@PathVariable int id, Model model, HttpServletRequest request) {
+        setupSinglePostPage(id, model, request);
+        return "single-post";
+    }
+
+    @GetMapping("/editPostEmptyComment/{id}")
+    public String editPostEmptyCommentHandler(@PathVariable int id, Model model, HttpServletRequest request) {
+        if (request.getSession(false) != null) {
+            setupEditPostPage(id, model, request);
+            model.addAttribute("notice", "To add a comment you must enter the comment in the comment text area!")
+            return "edit-post";
+        } else {
+            model.addAttribute("user", new User());
+            return "login";
+        }
+    }
+
+    @GetMapping("/dashboard/edit/{id}")
+    public String editPostPageSetup(@PathVariable int id, Model model, HttpServletRequest request) {
+        if (request.getSession(false) != null) {
+            setupEditPostPage(id, model, request);
+            return "edit-post";
+        } else {
+            model.addAttribute("user", new User());
+            return "login";
+        }
     }
 
 }
