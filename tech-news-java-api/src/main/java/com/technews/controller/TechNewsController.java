@@ -13,6 +13,7 @@ import com.technews.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -119,5 +120,18 @@ public class TechNewsController {
         }
     }
 
-    
+    @PostMapping("/posts/{id}")
+    public String updatePostDashboardPage(@PathVariable int id,@ModelAttribute Post post, Model model, HttpServletRequest request) {
+
+        if (request.getSession(false) == null) {
+            model.addAttribute("user", new User());
+            return "redirect/dashboard";
+        } else {
+            Post tempPost = postRepository.getById(id);
+            tempPost.setTitle(post.getTitle());
+            postRepository.save(tempPost);
+
+            return "redirect:/dashboard";
+        }
+    }
 }
