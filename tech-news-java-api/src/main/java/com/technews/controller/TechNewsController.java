@@ -2,6 +2,7 @@ package com.technews.controller;
 
 
 import com.technews.model.User;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.ui.Model;
 import com.technews.repository.CommentRepository;
@@ -56,6 +57,40 @@ public class TechNewsController {
         boolean isPasswordValid = BCrypt.checkpw(user.getPassword(), sessionUserPassword);
         if (isPasswordValid == false) {
             model.addAttribute("notice", "Password is not valid!");
+            return "login";
+        }
+
+        sessionUser.setLoggedIn(true);
+        request.getSession().setAttribute("SESSION_USER", sessionUser);
+
+        return "redirect:/dashboard";
+    }
+
+    @PostMapping
+    public String signup(@ModelAttribute User user, Model model, HttpServletRequest request) throws Exception {
+
+        if ((user.getUsername().equals(null) || user.getUsername().isEmpty()) || (user.getPassword().equals(null) || user.getPassword().isEmpty() || user.getEmail().equals(null) || user.getEmail().isEmpty())) {
+            model.addAttribute("notice", "In order to signup username, email address, and password must be populated!");
+            return "login";
+        }
+
+        try {
+            // Encrypt Password
+            user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+            userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("notice", "Email address is not available! Please choose a different unique email address!");
+            return "login";
+        }
+
+        User sessionUser = userRepository.findUserByEmail(user.getEmail());
+
+        try {
+            if (sessionUser.equals(null)) {
+
+            }
+        } catch (NullPointerException e) {
+            model.addAttribute("notice", "User is not recognized!");
             return "login";
         }
 
