@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+
 <article class="post" th:fragment="post-fragment">
     <div class="title">
         <a th:href="@{ ${post.postUrl} }" target="_blank">[[${post.title}]]</a>
+
         <div th:if="${#strings.contains(post.postUrl, 'http://')}">
             <div th:with="arg=${#strings.replace(post.postUrl,'http://','')}">
                 <div th:if="${#strings.contains(arg, '/')}">
@@ -29,6 +31,7 @@
                 </div>
             </div>
         </div>
+
         <div th:if="${#strings.contains(post.postUrl, 'https://')}">
             <div th:with="arg=${#strings.replace(post.postUrl,'https://','')}">
                 <div th:if="${#strings.contains(arg, '/')}">
@@ -48,6 +51,7 @@
                 </div>
             </div>
         </div>
+
         <div th:if="${#strings.contains(post.postUrl, 'www.')}">
             <div th:with="arg=${#strings.replace(post.postUrl,'www.','')}">
                 <div th:if="${#strings.contains(arg, '/')}">
@@ -67,9 +71,11 @@
                 </div>
             </div>
         </div>
+
         <div th:if="${post.voteCount == 1}" class="meta">
             [[${post.voteCount}]] point by [[${post.userName}]] on
             <span th:text="${#dates.format(post.postedAt, 'MM-dd-YY')}"></span>
+
             <a th:href="@{/post/{id}(id=${post.id})}" th:if="${post.comments.size() == 1}">[[${post.comments.size()}]]
                 comment</a>
             <a th:href="@{/post/{id}(id=${post.id})}" th:unless="${post.comments.size() == 1}">[[${post.comments.size()}]]
@@ -86,4 +92,5 @@
         </div>
     </div>
 </article>
+
 </body>
