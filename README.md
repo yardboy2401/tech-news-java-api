@@ -14,7 +14,7 @@ The task is to create a blog-style Java App that developers can use to add posts
 https://github.com/yardboy2401/tech-news-java-api
 
 ## Link to Live Deployed Application
-
+https://tech-news-java-api-wymore.herokuapp.com/
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/85953688/182213461-f7cb5b45-48e1-42c3-97b9-237e7f013321.png)
